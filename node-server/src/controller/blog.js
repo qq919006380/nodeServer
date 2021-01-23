@@ -11,26 +11,52 @@ const getList = (author, keyword) => {
 
     return exec(sql)
 }
-const getDetail = (author, keyword) => {
-    return {
-        id: 1,
-        title: '标题A',
-        content: '内容A',
-        createTime: 123213132,
-        author: 'zhangsan'
-    }
+const getDetail = (id) => {
+    const sql = `select * from blogs where id='${id}'`
+    return exec(sql).then(rows => {
+        return rows[0]
+    })
 
 }
 const newBlog = (blogData = {}) => {
-    return {
-        id: 3,
-    }
+    const title = blogData.title
+    const content = blogData.content
+    const author = blogData.author
+    const createTime = 'Now()'
+
+    const sql = `insert into blogs(title,content,createtime,author)
+     values('${title}','${content}',${createTime},'${author}');`
+
+    return exec(sql).then(insertData => {
+        console.log(insertData);
+        return {
+            id: insertData.insertId
+        }
+    })
 }
 const updateBlog = (id, blogData = {}) => {
-    return true
+    const title = blogData.title
+    const content = blogData.content
+    const sql = `
+update blogs set title='${title}',content='${content}' where id=${id}
+`
+    return exec(sql).then(updateData => {
+        console.log(updateData);
+        if (updateData.affectedRows > 0) {
+            return true
+        }
+        return false
+    })
+
 }
-const delBlog = (id) => {
-    return true
+const delBlog = (id, author) => {
+    const sql = `delete from blogs where id='${id}' and author='${author}';`
+    return exec(sql).then(delData => {
+        if (delData.affectedRows > 0) {
+            return true
+        }
+        return false
+    })
 }
 module.exports = {
     getList, getDetail, newBlog, updateBlog, delBlog
