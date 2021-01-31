@@ -61,11 +61,7 @@ const handleBlogRouter = (req, res) => {
                 return new ErrorModel('删除博客失败')
             }
         })
-        if (result) {
-            return new SuccessModel()
-        } else {
-            return new ErrorModel('删除博客失败')
-        }
+        
 
     }
 }

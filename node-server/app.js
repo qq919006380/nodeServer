@@ -58,9 +58,20 @@ const serverHandle = (req, res) => {
         // }
 
         // 处理user路由
-        const userData = handleUseRouter(req, res)
-        if (userData) {
-            res.end(JSON.stringify(userData))
+        // const userData = handleUseRouter(req, res)
+        // if (userData) {
+        //     res.end(JSON.stringify(userData))
+        //     return
+        // }
+
+
+        const userResult = handleUseRouter(req, res)
+        if (userResult) {
+            userResult.then(userData => {
+                res.end(
+                    JSON.stringify(userData)
+                )
+            })
             return
         }
 
