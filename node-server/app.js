@@ -30,7 +30,8 @@ const getPostData = (req) => {
 const serverHandle = (req, res) => {
     // 设置返回的格式json
     res.setHeader('Content-type', 'application/json')
-
+    // 允许所有域名访问
+    res.setHeader('Access-Control-Allow-Origin', '*');
     // 获取path
     const url = req.url
     req.path = url.split('?')[0]
