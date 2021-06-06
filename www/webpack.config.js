@@ -138,6 +138,7 @@ module.exports = {
     },
     disableHostCheck: true,
     hot: true,
+    port:8080,
     // open: true,
   },
   devtool: 'inline-cheap-module-source-map',
