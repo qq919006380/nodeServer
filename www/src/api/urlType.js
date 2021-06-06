@@ -4,6 +4,12 @@
  * @param {String} type 接口请求类型分别支持json, form, micro
  */
 export const blog = [
+  // 博客列表
+  {
+    name: 'list',
+    url: '/api/blog/list',
+    type: "get"
+  },
   // 博客详情
   {
     name: 'detail',

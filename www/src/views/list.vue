@@ -1,19 +1,20 @@
 <template>
-    <button @click="post">asd</button>
-
-    <button @click="xxx">test</button>
+    <button @click="xxa">asd</button>
+    <button @click="post">post</button>
 </template>
 <script>
+import { $api } from '../api';
 export default {
+    setup(props, ctx) {
+        async function xxa() {
+            var  {data}  = await $api.blog.list();
+            console.log(data);
+        }
+        return { xxa }
+    },
     methods: {
-        async xxx() {
-            await this.$api.blog.detail({ a: "s" })
-        },
         async post() {
-            var { data } = await this.$api.blog.detail({
-                title: "xxx",
-                content: "内容1020",
-            });
+            var { data } = await this.$api.blog.list();
             console.log(data);
         },
     }
