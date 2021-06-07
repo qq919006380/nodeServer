@@ -1,157 +1,49 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {VueLoaderPlugin} = require('vue-loader');
-const WebpackBar = require('webpackbar');
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-const babelConfig = {
-  cacheDirectory: true,
-  presets: [
-    [
-      '@babel/preset-env',
-      {
-        targets: {
-          browsers: [
-            'last 2 versions',
-            'Firefox ESR',
-            '> 1%',
-            'ie >= 11',
-            'iOS >= 8',
-            'Android >= 4',
-          ],
-        },
-      },
-    ],
-    '@babel/preset-typescript',
-  ],
-  plugins: [
-    [
-      'babel-plugin-import',
-      {
-        libraryName: 'ant-design-vue',
-        libraryDirectory: '', // default: lib
-        style: true,
-      },
-    ],
-    ['@vue/babel-plugin-jsx', { mergeProps: false, enableObjectSlots: false }],
-    '@babel/plugin-proposal-optional-chaining',
-    '@babel/plugin-transform-object-assign',
-    '@babel/plugin-proposal-object-rest-spread',
-    '@babel/plugin-proposal-export-default-from',
-    '@babel/plugin-proposal-export-namespace-from',
-    '@babel/plugin-proposal-class-properties',
-  ],
-};
-
-/** @type {import('webpack').Configuration} */
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { VueLoaderPlugin } = require("vue-loader");
 module.exports = {
-  mode: 'development',
-  entry: {
-    app:'/src/main.js',// path.resolve(__dirname, '/src/main.js'),
+  mode: "development",
+  entry: path.resolve(__dirname, "./src/main.js"),
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "js/[name].js",
   },
-  stats: {
-    warningsFilter: /export .* was not found in/,
+  devServer: {
+    contentBase: path.resolve(__dirname, "./dist"),
+    compress: true,
+    port: 8080,
   },
   module: {
     rules: [
       {
-        test: /\.md$/,
-        loader: 'raw-loader',
+        test: /\.js$/,
+        exclude: /node_modules/, // 不编译node_modules下的文件
+        loader: "babel-loader",
       },
       {
-        test: /\.(vue)$/,
-        loader: 'vue-loader',
-      },
-      {
-        test: /\.(ts|tsx)?$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: babelConfig,
-          },
-          {
-            loader: 'ts-loader',
-            options: {
-              transpileOnly: true,
-              appendTsSuffixTo: ['\\.vue$'],
-              happyPackMode: false,
-            },
-          },
-        ],
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.js$/, 
-        loader: 'babel-loader',
-        exclude: /pickr.*js/,
-        options: babelConfig,
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]?[hash]',
-        },
-      },
-      {
-        test: /\.less$/,
-        use: [
-          { loader: 'style-loader' },
-          {
-            loader: 'css-loader',
-            options: { sourceMap: true },
-          },
-          {
-            loader: 'less-loader',
-            options: {
-              lessOptions: {
-                sourceMap: true,
-                javascriptEnabled: true,
-              },
-            },
-          },
-        ],
+        test: /\.vue$/,
+        use: ["vue-loader"],
       },
       {
         test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {},
-          },
-          'css-loader',
-        ],
+        use: ["style-loader", "css-loader"],
       },
+      {
+        test:/\.(ttf|woff|svg|eot|ttf)\??.*$/,
+        loader: 'file-loader'
+      },
+      {
+        test: /\.(gif|jpg|png)\??.*$/,
+        loader: 'url-loader'
+    },
     ],
   },
-  resolve: {
-    alias: {
-      'ant-design-vue/es': path.join(__dirname, './components'),
-      'ant-design-vue': path.join(__dirname, './components'),
-      vue$: 'vue/dist/vue.esm-bundler.js',
-    },
-    extensions: ['.js', 'ts',  '.vue', '.md'],
-  },
-  devServer: {
-    historyApiFallback: {
-      rewrites: [{ from: /./, to: '/index.html' }],
-    },
-    disableHostCheck: true,
-    hot: true,
-    port:8080,
-    // open: true,
-  },
-  devtool: 'inline-cheap-module-source-map',
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-    }),
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
-      filename: 'index.html',
-      inject: true,
+      template: path.resolve(__dirname, "src/index.html"), // 我们要使用的 html 模板地址
+      filename: "index.html", // 打包后输出的文件名
+      title: "手搭 Vue 开发环境", // index.html 模板内，通过 <%= htmlWebpackPlugin.options.title %> 拿到的变量
     }),
     new VueLoaderPlugin(),
-    new WebpackBar(),
   ],
 };
