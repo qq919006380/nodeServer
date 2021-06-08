@@ -1,14 +1,11 @@
-const { exec } = require("../db/mysql")
+const { exec } = require("../db/mysql");
 const login = (username, password) => {
-    const sql = `
+  const sql = `
         select username, realname from users where username='${username}' and password='${password}'
-    `
-    return exec(sql).then(rows => {
-        return rows[0] || {}
-
-
-    })
-
-
-}
-module.exports = { login }
+    `;
+  let data = exec(sql).then((rows) => {
+    return rows[0] || {};
+  });
+  return data;
+};
+module.exports = { login };
