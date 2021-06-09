@@ -13,19 +13,9 @@ let post = axios.create({
   baseURL: baseurl,
   headers: {
     "X-Requested-With": "XMLHttpRequest",
-    "Content-Type": "application/x-www-form-urlencoded",
+    "Content-Type": "application/json",
     "Cache-control": "no-cache",
   },
-
-  transformRequest: [
-    function (data) {
-      if (!data || Object.keys(data).length <= 0) {
-        return "";
-      }
-      let str = querystring.stringify(data);
-      return str;
-    },
-  ],
 });
 setAccessToken(post);
 

@@ -1,22 +1,28 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
+  {path: '/', redirect: 'index'},
+
   {
-    path: '/',
-    name: 'index',
-    component: () => import('../views/index.vue')
+    path: "/index",
+    name: "index",
+    component: () => import("../views/index.vue"),
   },
   {
-    path: '/list',
-    name: 'list',
-    component: () => import('../views/list.vue')
+    path: "/login",
+    name: "login",
+    component: () => import("../views/login.vue"),
   },
-  
-]
+  {
+    path: "/list",
+    name: "list",
+    component: () => import("../views/list.vue"),
+  },
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
-})
+  routes,
+});
 
-export { router, routes }
+export { router };
