@@ -13,7 +13,6 @@ const handleUseRouter = (req, res) => {
         // 设置seesion
         req.session.username = data.username;
         req.session.realname = data.realname;
-
         // 同步到redis中
         set(req.sessionId, req.session);
 

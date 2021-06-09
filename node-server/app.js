@@ -6,7 +6,7 @@ const { lowerFirst } = require("lodash");
 // 获取cookie的过期时间
 const getCookieExpires = () => {
   const d = new Date();
-  d.setTime(d.getTime() - 24 * 60 * 60 * 1000);
+  d.setTime(d.getTime() + 24 * 60 * 60 * 1000);
   return d.toGMTString();
 };
 // session
@@ -100,9 +100,8 @@ const serverHandle = (req, res) => {
       return getPostData(req);
     })
     .then((postData) => {
-      
       req.body = postData;
-      
+
       // 处理blog路由
       const blogResult = handleBlogRouter(req, res);
       if (blogResult) {

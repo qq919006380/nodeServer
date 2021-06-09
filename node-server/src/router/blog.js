@@ -9,7 +9,7 @@ const { SuccessModel, ErrorModel } = require("../model/resModel");
 
 // 登录验证
 let loginCheck = (req) => {
-  if (!req.session.usename) {
+  if (!req.session.username) {
     return Promise.resolve(new ErrorModel("尚未登录"));
   }
 };
@@ -44,12 +44,15 @@ const handleBlogRouter = (req, res) => {
   if (method == "POST" && req.path === "/api/blog/new") {
     // const data = newBlog(req.body)
     // return new SuccessModel(data)
+
     const loginCheckResult = loginCheck(req);
     if (loginCheckResult) {
       return loginCheckResult;
     }
-
-    req.body.author = req.session.usename;
+    
+console.log(req.session);
+    req.body.author = req.session.username;
+    
     const result = newBlog(req.body);
     return result.then((data) => {
       return new SuccessModel(data);
