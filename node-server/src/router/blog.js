@@ -49,10 +49,10 @@ const handleBlogRouter = (req, res) => {
     if (loginCheckResult) {
       return loginCheckResult;
     }
-    
-console.log(req.session);
+
+    console.log(req.session);
     req.body.author = req.session.username;
-    
+
     const result = newBlog(req.body);
     return result.then((data) => {
       return new SuccessModel(data);
