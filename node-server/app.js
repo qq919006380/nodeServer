@@ -1,16 +1,14 @@
 const querystring = require("querystring");
 const { get, set } = require("./src/db/redis.js");
+const { access } = require("./src/utils/log");
 const handleUseRouter = require("./src/router/user");
 const handleBlogRouter = require("./src/router/blog");
-const { lowerFirst } = require("lodash");
 // 获取cookie的过期时间
 const getCookieExpires = () => {
   const d = new Date();
   d.setTime(d.getTime() + 24 * 60 * 60 * 1000);
   return d.toGMTString();
 };
-// session
-const SESSION_DATA = {};
 // 处理post data
 const getPostData = (req) => {
   const promise = new Promise((resolve, reject) => {
@@ -37,6 +35,11 @@ const getPostData = (req) => {
   return promise;
 };
 const serverHandle = (req, res) => {
+  access(
+    `${req.method} -- ${req.url} -- ${
+      req.headers["user-agent"]
+    } -- ${Date.now()}`
+  );
   // 设置返回的格式json
   res.setHeader("Content-type", "application/json");
   // 允许所有域名访问
@@ -60,20 +63,6 @@ const serverHandle = (req, res) => {
     const val = arr[1].trim();
     req.cookie[key] = val;
   });
-
-  // 解析session
-  //   const needSetCookie = false;
-  // const userId = req.cookie.userId;
-  // if (userId) {
-  //   if (!SESSION_DATA[userId]) {
-  //     SESSION_DATA[userId] = {};
-  //   }
-  // } else {
-  //   needSetCookie = true;
-  //   userId = `${Date.now()}_${Math.random()}`;
-  //   SESSION_DATA[userId] = {};
-  // }
-  // req.session = SESSION_DATA[userId];
 
   // // 解析session使用redis
   let needSetCookie = false;

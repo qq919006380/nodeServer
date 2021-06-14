@@ -1,5 +1,5 @@
 <template>
-  <div id="nav">
+  <div id="nav" class="shadow-md mb-4 p-4 bg-blue-100">
     <div>
       <router-link to="index">主页</router-link>
       <router-link to="list">首页</router-link>
@@ -10,7 +10,9 @@
       <router-link to="reg">注册</router-link>
     </div>
   </div>
-  <router-view />
+  <div class="container-warp">
+    <router-view />
+  </div>
 </template>
 <script>
 export default {
@@ -18,7 +20,6 @@ export default {
 </script>
 <style scoped>
 #nav {
-  padding: 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -32,5 +33,10 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.container-warp{
+  /* background-color: aquamarine; */
+  /* background-image: url('./static/bg.png'); */
 }
 </style>
