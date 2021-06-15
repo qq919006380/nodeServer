@@ -5,60 +5,49 @@ const {
   updateBlog,
   delBlog,
 } = require("../controller/blog");
-var express = require("express");
-var router = express.Router();
+const router = require('koa-router')()
 const { SuccessModel, ErrorModel } = require("../model/resModel");
 const loginCheck = require("../middleware/loginCheck.js");
 
-router.get("/list", function (req, res, next) {
-  const author = req.query.author || "";
-  const keyword = req.query.keyword || "";
+router.prefix("/api/blog");
 
-  const result = getList(author, keyword);
-  return result.then((listData) => {
-    res.json(new SuccessModel(listData));
-  });
+router.get("/list", async function (ctx, next) {
+  const author = ctx.query.author || "";
+  const keyword = ctx.query.keyword || "";
+
+  const listData = await getList(author, keyword);
+  ctx.body = new SuccessModel(listData);
 });
 
-router.get("/detail", function (req, res, next) {
-  const result = getDetail(req.query.id);
-  return result.then((data) => {
-    res.json(new SuccessModel(data));
-  });
+router.get("/detail", async function (ctx, next) {
+  const data = await getDetail(ctx.query.id);
+  ctx.body = new SuccessModel(data);
 });
 
-router.post("/new", loginCheck, function (req, res, next) {
-  req.body.author = req.session.username;
-
-  const result = newBlog(req.body);
-  return result.then((data) => {
-    res.json(new SuccessModel(data));
-  });
+router.post("/new", loginCheck, async function (ctx, next) {
+  const body = ctx.request.body;
+  body.author = ctx.session.username;
+  const data = await newBlog(body);
+  ctx.body = new SuccessModel(data);
 });
 
-router.post("/update", loginCheck, function (req, res, next) {
-  const result = updateBlog(req.query.id, req.body);
-
-  return result.then((val) => {
-    if (val) {
-      res.json(new SuccessModel());
-    } else {
-      res.json(new ErrorModel("更新内容失败"));
-    }
-  });
+router.post("/update", loginCheck, async function (ctx, next) {
+  const val = await updateBlog(ctx.query.id, ctx.body);
+  if (val) {
+    ctx.body = new SuccessModel();
+  } else {
+    ctx.body = new ErrorModel("更新内容失败");
+  }
 });
 
-router.get("/del", loginCheck, function (req, res, next) {
-  const author = req.session.usename;
-  const result = delBlog(req.query.id, author);
-
-  return result.then((val) => {
-    if (val) {
-      res.json(new SuccessModel());
-    } else {
-      res.json(new ErrorModel("删除博客失败"));
-    }
-  });
+router.get("/del", loginCheck, async function (ctx, next) {
+  const author = ctx.session.usename;
+  const val = await delBlog(ctx.query.id, author);
+  if (val) {
+    ctx.body = new SuccessModel();
+  } else {
+    ctx.body = new ErrorModel("删除博客失败");
+  }
 });
 
 module.exports = router;
